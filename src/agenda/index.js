@@ -297,17 +297,18 @@ export default class AgendaView extends Component {
   }
 
   onDayChange = debounce((day) => {
+    console.log('Calling on day change')
     const newDate = parseDate(day);
     const withAnimation = dateutils.sameMonth(newDate, this.state.selectedDay);
     this.calendar.scrollToDay(day, this.calendarOffset(), withAnimation);
-      this.setState({
-        selectedDay: parseDate(day)
-      });
+    this.setState({
+      selectedDay: parseDate(day)
+    });
 
-      if (this.props.onDayChange) {
-        this.props.onDayChange(xdateToData(newDate));
-      }
-  }, 100);
+    if (this.props.onDayChange) {
+      this.props.onDayChange(xdateToData(newDate));
+    }
+  }, 500);
 
   generateMarkings() {
     let markings = this.props.markedDates;
