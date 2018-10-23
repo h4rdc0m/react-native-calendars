@@ -5,6 +5,7 @@ import {
   Dimensions,
   Animated,
   ViewPropTypes,
+  InteractionManager,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
@@ -298,13 +299,15 @@ export default class AgendaView extends Component {
     const newDate = parseDate(day);
     const withAnimation = dateutils.sameMonth(newDate, this.state.selectedDay);
     this.calendar.scrollToDay(day, this.calendarOffset(), withAnimation);
-    this.setState({
-      selectedDay: parseDate(day)
-    });
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({
+        selectedDay: parseDate(day)
+      });
 
-    if (this.props.onDayChange) {
-      this.props.onDayChange(xdateToData(newDate));
-    }
+      if (this.props.onDayChange) {
+        this.props.onDayChange(xdateToData(newDate));
+      }
+    });
   }
 
   generateMarkings() {
