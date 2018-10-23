@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
+import debounce from 'lodash.debounce';
 
 import {parseDate, xdateToData} from '../interface';
 import dateutils from '../dateutils';
@@ -295,11 +296,10 @@ export default class AgendaView extends Component {
     );
   }
 
-  onDayChange(day) {
+  onDayChange = debounce((day) => {
     const newDate = parseDate(day);
     const withAnimation = dateutils.sameMonth(newDate, this.state.selectedDay);
     this.calendar.scrollToDay(day, this.calendarOffset(), withAnimation);
-    InteractionManager.runAfterInteractions(() => {
       this.setState({
         selectedDay: parseDate(day)
       });
@@ -307,8 +307,7 @@ export default class AgendaView extends Component {
       if (this.props.onDayChange) {
         this.props.onDayChange(xdateToData(newDate));
       }
-    });
-  }
+  }, 100);
 
   generateMarkings() {
     let markings = this.props.markedDates;
